@@ -50,15 +50,21 @@
     owner: root
     group: root
 
-- name: "Check if Tuleap repo file exists"
+- name: "Check if SELinux is installed"
   stat:
-    path: /etc/yum.repos.d/tuleap.repo
-  register: tuleap_repo_file
+    path: /etc/selinux/config
+  register: selinux
 
 - name: "Set SELinux in permissive mode"
   selinux:
     policy: targeted
     state: permissive
+  when: not ansible_check_mode and selinux.stat.exists
+
+- name: "Check if Tuleap repo file exists"
+  stat:
+    path: /etc/yum.repos.d/tuleap.repo
+  register: tuleap_repo_file
 
 - name: "Ensure Tuleap is in state {{ tuleap_packages_state }}."
   yum:
