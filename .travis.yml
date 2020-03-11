@@ -41,7 +41,7 @@ script:
     || (echo 'Idempotence test: fail' && exit 1)
   - >
     echo Try to access Tuleap Website
-    && curl --insecure https://localhost
+    && curl --insecure https://127.0.0.1
   - >
     echo Stop and remove docker container
     && sudo docker stop "$(cat ${container_id})"
