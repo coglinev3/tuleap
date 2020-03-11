@@ -5,8 +5,9 @@
 
 # package dependencies for this role
 tuleap_role_dependencies:
-  - python2-PyMySQL
   - libselinux-python
+  - python2-PyMySQL
+  - postfix
 
 # name for Tuleap yum repository
 tuleap_repo: tuleap
