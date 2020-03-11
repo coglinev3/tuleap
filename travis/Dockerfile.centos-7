@@ -24,7 +24,7 @@ RUN yum makecache fast \
        postfix \
        which \
        sudo \
-  && systemctl enable openssh-server \
+  && systemctl enable sshd \
   && systemctl enable postfix
 
 # Disable requiretty.
