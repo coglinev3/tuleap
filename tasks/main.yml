@@ -26,7 +26,8 @@
 
 # Banner message
 - block:
-    - set_fact:
+    - name: "Create post install mesage"
+      set_fact:
         post_install: |
           Tuleap Community Edition was successfully installed.
 

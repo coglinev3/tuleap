@@ -16,7 +16,7 @@
         backup: "yes"
       notify:
         - restart postfix
-    
+
     - name: "Configure postfix alias_maps"
       lineinfile:
         path: /etc/postfix/main.cf
@@ -25,7 +25,7 @@
         backup: "yes"
       notify:
         - restart postfix
-    
+
     - name: "Configure postfix alias_database"
       lineinfile:
         path: /etc/postfix/main.cf
@@ -34,7 +34,7 @@
         backup: "yes"
       notify:
         - restart postfix
-    
+
     - name: "Configure postfix recipient_delimiter"
       lineinfile:
         path: /etc/postfix/main.cf
