@@ -1,0 +1,88 @@
+---
+# file: roles/tuleap/tasks/setup-RedHat.yml
+
+- name: "Install Tuleap role dependencies"
+  yum:
+    name: "{{ tuleap_role_dependencies }}"
+    state: "{{ tuleap_packages_state }}"
+  register: install_role_dependencies
+  tags:
+    - install
+
+- name: "Install EPEL Repository"
+  yum:
+    name: epel-release
+    state: present
+  when: not ansible_distribution == "Fedora"
+  tags:
+    - install
+
+- name: "CentOS: Install Software Collections repository"
+  yum:
+    name: centos-release-scl
+    state: present
+  when: ansible_distribution == "CentOS"
+  tags:
+    - install
+
+- name: "RedHat: Install Software Collections repository"
+  command: >-
+    yum-config-manager
+    --enable rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms
+  when: ansible_distribution == "RedHat"
+  tags:
+    - install
+
+- name: "Install remi-safe repository (for PHP)"
+  yum:
+    name: "https://rpms.remirepo.net/enterprise/remi-release-{{ ansible_distribution_major_version }}.rpm"
+    state: present
+
+- name: "Install Tuleap repository"
+  yum_repository:
+    name: tuleap
+    description: Tuleap repository
+    file: tuleap
+    baseurl: "https://ci.tuleap.net/yum/tuleap/rhel/{{ ansible_distribution_major_version }}/stable/$basearch"
+    enabled: "yes"
+    gpgcheck: "yes"
+    gpgkey: https://ci.tuleap.net/yum/tuleap/gpg.key
+    owner: root
+    group: root
+
+- name: "Check if Tuleap repo file exists"
+  stat:
+    path: /etc/yum.repos.d/tuleap.repo
+  register: tuleap_repo_file
+
+- name: "Set SELinux in permissive mode"
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: "Ensure Tuleap is in state {{ tuleap_packages_state }}."
+  yum:
+    name: "{{ tuleap_packages }}"
+    state: "{{ tuleap_packages_state }}"
+    enablerepo: "{{ tuleap_repo }}"
+  register: install_tuleap
+  when: tuleap_repo_file.stat.exists
+
+- name: "Start and enable MySQL server"
+  service:
+    name: rh-mysql57-mysqld
+    state: started
+    enabled: "yes"
+  register: tuleap_mysql
+  when: install_tuleap.changed
+
+- name: "Ensure Tuleap plugins are in state {{ tuleap_plugins_state }}."
+  yum:
+    name: "{{ tuleap_plugins }}"
+    state: "{{ tuleap_plugins_state }}"
+    enablerepo: "{{ tuleap_repo }}"
+  when: tuleap_repo_file.stat.exists
+  notify:
+    - register tuleap_plugins
+    - reload nginx
+    - restart tuleap

@@ -1,0 +1,11 @@
+---
+# file: roles/tuleap/vars/RedHat-7.yml
+#
+# Variables Associated With This Role
+
+# package dependencies for this role
+tuleap_role_dependencies:
+  - python2-PyMySQL
+
+# name for Tuleap yum repository
+tuleap_repo: tuleap

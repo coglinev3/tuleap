@@ -1,0 +1,22 @@
+---
+# file: roles/tuleap/handlers/main.yml
+#
+# Handlers for role tuleap
+
+- name: "restart postfix"
+  service:
+    name: postfix
+    state: restarted
+
+- name: "register tuleap_plugins"
+  command: /usr/share/tuleap/tools/utils/php73/run.php --module=nginx
+
+- name: "reload nginx"
+  service:
+    name: nginx
+    state: reloaded
+
+- name: "restart tuleap"
+  service:
+    name: tuleap-php-fpm
+    state: restarted

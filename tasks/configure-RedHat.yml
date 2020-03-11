@@ -1,0 +1,70 @@
+---
+# file: roles/tuleap/tasks/configure-RedHat.yml
+
+- name: "Check if this is a new Tuleap installation"
+  stat:
+    path: /etc/tuleap/conf/local.inc
+  register: tuleap_conf_file
+
+- name: "Configure sql-mode for MySQL server"
+  lineinfile:
+    path: /etc/opt/rh/rh-mysql57/my.cnf.d/rh-mysql57-mysql-server.cnf
+    regexp: '^interpreter_python '
+    insertafter: '^\[mysqld\]'
+    line: "sql-mode=NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+    backup: "yes"
+  register: tuleap_sql_mode
+  when: (tuleap_packages_state != "absent") and install_tuleap.changed
+
+- name: "Restart MySQL server"
+  service:
+    name: rh-mysql57-mysqld
+    state: restarted
+  when: tuleap_sql_mode.changed
+
+- name: "Set initial MySQL root password"
+  mysql_user:
+    name: root
+    login_user: root
+    host: "{{ item }}"
+    password: "{{ tuleap_mysql_password }}"
+    priv: "*.*:ALL,GRANT"
+  when: >
+    (tuleap_packages_state != "absent") and
+    install_role_dependencies.changed and
+    not tuleap_conf_file.stat.exists and
+    tuleap_mysql.state is defined and
+    tuleap_mysql.state == "started"
+  with_items:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: "Configure Tuleap"
+  command: >-
+    /usr/share/tuleap/tools/setup.el7.sh
+    --configure
+    --server-name={{ tuleap_server_name }}
+    --mysql-server=localhost
+    --mysql-password=password
+    --assumeyes
+  when: not tuleap_conf_file.stat.exists
+
+- name: "Check if ForgeUpgrade exists"
+  stat:
+    path: /etc/tuleap/forgeupgrade/config.ini
+  register: tuleap_forgeupgrade
+
+- name: "Reference pluginsadministration in ForgeUpgrade"
+  lineinfile:
+    path: /etc/tuleap/forgeupgrade/config.ini
+    regexp: '^.*pluginsadministration'
+    insertafter: '^\[core\]'
+    line: 'path[] = "/usr/share/tuleap/plugins/pluginsadministration"'
+    state: present
+    backup: "yes"
+  when: tuleap_forgeupgrade.stat.exists
+  notify:
+    - reload nginx
+    - restart tuleap
