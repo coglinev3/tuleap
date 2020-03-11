@@ -40,7 +40,7 @@ script:
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
   - >
-    echo Access Tuleap Website
+    echo Try to access Tuleap Website
     && curl --insecure https://localhost
   - >
     echo Stop and remove docker container
