@@ -21,8 +21,11 @@ RUN yum makecache fast \
        git \
        ansible \
        openssh-server \
+       postfix \
        which \
-       sudo
+       sudo \
+  && systemctl enable openssh-server \
+  && systemctl enable postfix
 
 # Disable requiretty.
 RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
