@@ -20,11 +20,14 @@ RUN yum makecache fast \
        curl \
        git \
        ansible \
+       which \
        openssh-server \
        postfix \
-       which \
        sudo \
-  && systemctl enable sshd \
+  && systemctl enable sshd
+
+# Prevent postfix from using IPv6
+RUN sed -i -e 's/^inet_interfaces\(.*\)/inet_interfaces = 127.0.0.1/' /etc/postfix/main.cf \
   && systemctl enable postfix
 
 # Disable requiretty.

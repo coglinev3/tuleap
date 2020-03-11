@@ -7,7 +7,6 @@
 tuleap_role_dependencies:
   - libselinux-python
   - python2-PyMySQL
-  - postfix
 
 # name for Tuleap yum repository
 tuleap_repo: tuleap
