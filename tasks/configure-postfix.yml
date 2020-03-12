@@ -1,0 +1,47 @@
+---
+# file: roles/tuleap/tasks/configure-postfix.yml
+
+- name: "Check if postfix is installed"
+  stat:
+    path: /etc/postfix/main.cf
+  register: postfix_conf_file
+
+- block:
+    - name: "Configure postfix myhostname"
+      lineinfile:
+        path: /etc/postfix/main.cf
+        regexp: '^myhostname '
+        insertafter: '^#myhostname '
+        line: "myhostname = {{ tuleap_server_name }}"
+        backup: "yes"
+      notify:
+        - restart postfix
+
+    - name: "Configure postfix alias_maps"
+      lineinfile:
+        path: /etc/postfix/main.cf
+        regexp: '^alias_maps '
+        line: "alias_maps = hash:/etc/aliases,hash:/etc/aliases.codendi"
+        backup: "yes"
+      notify:
+        - restart postfix
+
+    - name: "Configure postfix alias_database"
+      lineinfile:
+        path: /etc/postfix/main.cf
+        regexp: '^alias_database '
+        line: "alias_database = hash:/etc/aliases,hash:/etc/aliases.codendi"
+        backup: "yes"
+      notify:
+        - restart postfix
+
+    - name: "Configure postfix recipient_delimiter"
+      lineinfile:
+        path: /etc/postfix/main.cf
+        regexp: '^recipient_delimiter '
+        insertafter: '^#recipient_delimiter '
+        line: "recipient_delimiter = +"
+        backup: "yes"
+      notify:
+        - restart postfix
+  when: postfix_conf_file.stat.exists

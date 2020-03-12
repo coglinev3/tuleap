@@ -1,0 +1,13 @@
+---
+# file: roles/tuleap/vars/RedHat-7.yml
+#
+# Variables Associated With This Role
+
+# package dependencies for this role
+tuleap_role_dependencies:
+  - libselinux-python
+  - python2-PyMySQL
+  - postfix
+
+# name for Tuleap yum repository
+tuleap_repo: tuleap

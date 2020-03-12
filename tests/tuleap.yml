@@ -1,0 +1,6 @@
+---
+# file: tests/tuleap.yml
+- hosts: all
+  become: true
+  roles:
+    - { role: coglinev3.tuleap }

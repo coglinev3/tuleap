@@ -1,0 +1,74 @@
+---
+# file: roles/tuleap/defaults/main.yml
+#
+# Default Lower Priority Variables For This Role
+
+# The fqdn of the server
+# Default:  "{{ ansible_hostname }}"
+#
+# tuleap_server_name: "tuleap.example.org"
+
+# Tuleap packages to install
+tuleap_packages:
+  - rh-mysql57-mysql-server
+  - tuleap
+  - tuleap-theme-burningparrot
+  - tuleap-theme-flamingparrot
+
+# Tuleap packages state
+#
+# Possible values:
+#   - present:  Tuleap is installed
+#   - latest:   Tuleap is updated to the latest
+#               available version in {{tuleap_version}}
+#   - absent:   Remove Tuelap packages
+#
+# Default value is "present" (no update)
+tuleap_packages_state: present
+
+# Tuleap plugins
+# You can install more plugins, see the whole list on
+# https://docs.tuleap.org/installation-guide/install-plugins.html#install-plugins.
+# However you don’t have to install all of them now. Start small and add them
+# on the go.
+tuleap_plugins:
+  - tuleap-plugin-agiledashboard
+  - tuleap-plugin-cardwall
+  - tuleap-plugin-graphontrackers
+  - tuleap-plugin-git
+  - tuleap-plugin-pullrequest
+#  - tuleap-plugin-api-explorer
+#  - tuleap-plugin-archivedeleteditems
+#  - tuleap-plugin-artifactsfolders
+#  - tuleap-plugin-botmattermost
+#  - tuleap-plugin-botmattermost-agiledashboard
+#  - tuleap-plugin-botmattermost-git
+#  - tuleap-plugin-bugzilla-reference
+#  - tuleap-plugin-captcha
+#  - tuleap-plugin-create-test-env
+#  - tuleap-plugin-docman
+#  - tuleap-plugin-forumml
+#  - tuleap-plugin-frs
+#  - tuleap-plugin-gitlfs
+#  - tuleap-plugin-hudson
+#  - tuleap-plugin-hudson-git
+#  - tuleap-plugin-hudson-svn
+#  - tuleap-plugin-ldap
+#  - tuleap-plugin-mediawiki
+#  - tuleap-plugin-openidconnectclient
+#  - tuleap-plugin-proftpd
+#  - tuleap-plugin-referencealias-core
+#  - tuleap-plugin-referencealias-git
+#  - tuleap-plugin-referencealias-mediawiki
+#  - tuleap-plugin-referencealias-svn
+#  - tuleap-plugin-referencealias-tracker
+#  - tuleap-plugin-svn
+#  - tuleap-plugin-tracker
+#  - tuleap-plugin-tracker-encryption
+#  - tuleap-plugin-webdav
+
+# State for Tuleap plugins
+tuleap_plugins_state: present
+
+# The root password for the MySQL server
+tuleap_mysql_password: password

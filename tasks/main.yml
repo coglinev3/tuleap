@@ -1,0 +1,49 @@
+---
+# file: roles/tuleap/tasks/main.yml
+
+- name: Gather os specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+      skip: true
+  tags: vars
+
+- name: "Define Tuleap server name"
+  set_fact:
+    tuleap_server_name: "{{ ansible_hostname }}"
+  when: tuleap_server_name is not defined
+
+# Setup/install tasks.
+- include_tasks: "setup-{{ ansible_os_family }}.yml"
+
+# Configuration tasks.
+- include_tasks: "configure-{{ ansible_os_family }}.yml"
+- include_tasks: "configure-postfix.yml"
+
+# Banner message
+- block:
+    - name: "Create post install mesage"
+      set_fact:
+        post_install: |
+          Tuleap Community Edition was successfully installed.
+
+          Now you can access the Tuleap server with the web interface.
+          Go to https://{{ tuleap_server_name }} and login as
+          site administrator (admin).
+          Default site administrator credentials can be found with:
+
+          ansible {{ ansible_hostname }} -b -a 'cat /root/.tuleap_passwd'
+
+          Store it securely and delete the file as soon as possible.
+
+    - name: Display post install message
+      debug:
+        msg: "{{ post_install.split('\n') }}"
+  when: >
+    not tuleap_conf_file.stat.exists and
+    tuleap_repo_file.stat.exists and
+    install_tuleap.changed
