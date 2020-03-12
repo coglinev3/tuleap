@@ -1,5 +1,7 @@
 # Ansible Role: tuleap
 
+[![Build Status](https://travis-ci.org/coglinev3/tuleap.svg?branch=master)](https://travis-ci.org/coglinev3/tuleap) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/coglinev3/tuleap) [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://raw.githubusercontent.com/coglinev3/tuleap/master/LICENSE)
+
 Installs Tuleap Community Edition (TCE).
 [Tuleap](https://www.tuleap.org/) is a all-in-one integrated Agil Management solution
 capable of orchestrating everything from idea to release delivery.
@@ -75,7 +77,7 @@ localhost   ansible_connection=local
 
 ## Version
 
-Release: 1.0.0
+Release: 1.0.1
 
 ## License
 

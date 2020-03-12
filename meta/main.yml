@@ -16,12 +16,12 @@ galaxy_info:
       versions:
         - 7
   galaxy_tags:
-    - Development
-    - Agil
-    - Management
-    - DevOps
-    - Kanban
-    - Scrum
+    - development
+    - agil
+    - management
+    - devops
+    - kanban
+    - scrum
 
 dependencies: []
 # List your role dependencies here, one per line.
