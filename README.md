@@ -1,14 +1,14 @@
 # Ansible Role: tuleap
 
 Installs Tuleap Community Edition (TCE).
-Tuleap is a all-in-one integrated Agil Management solution capable of
-orchestrating everything from idea to release delivery. Tuleap enables teams
-to plan, track, code, and collaborate on software products and applications
-from a single tool for increased productivity.
+[Tuleap](https://www.tuleap.org/) is a all-in-one integrated Agil Management solution
+capable of orchestrating everything from idea to release delivery.
+Tuleap enables teams to plan, track, code, and collaborate on software products
+and applications from a single tool for increased productivity.
 
 ## Requirements
 
-A RHEL/CentOS Server 7.x.
+A RHEL/CentOS Server 7.x (see [Installation Guide](https://docs.tuleap.org/installation-guide/full-installation.html) for details).
 
 ## Role Variables
 
@@ -52,10 +52,22 @@ tuleap_mysql_password: password
 
 None.
 
+## Example Inventory File
+
+```dosini
+# file: tests/inventory.ini
+
+[local]
+localhost   ansible_connection=local
+```
+
 ## Example Playbook
 
-```
-- hosts: tuleap
+```yml
+---
+# file: tests/tuleap.yml
+
+- hosts: local
   become: true
   roles:
     - { role: coglinev3.tuleap }
