@@ -6,9 +6,7 @@ galaxy_info:
   description: >-
     This Ansible role installs the Tuleap Community Edition. Tuleap is a
     all-in-one integrated Agile Management solution capable of orchestrating
-    everything from idea to release delivery. Tuleap enables teams to plan,
-    track, code, and collaborate on software products and applications from a
-    single tool for increased productivity.
+    everything from idea to release delivery.
   license: BSD
   min_ansible_version: 2.8
   platforms:
